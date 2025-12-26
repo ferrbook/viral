@@ -68,15 +68,12 @@ export const InputSection: React.FC<InputSectionProps> = ({ onGenerate, isGenera
             {activeTab === 'text' ? (
                 <div className="relative flex-1 group">
                     <textarea
-                    className="w-full h-full p-6 rounded-xl border border-slate-700 bg-slate-800/30 text-slate-100 placeholder-slate-500 focus:bg-slate-800/50 focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all resize-none outline-none font-medium leading-relaxed text-lg"
-                    placeholder="Paste article content, a news URL, or a rough idea here..."
+                    className="w-full h-full p-6 rounded-xl border border-slate-700 bg-slate-800/30 text-slate-100 placeholder-slate-500 focus:bg-slate-800/50 focus:ring-2 focus:ring-cyan-500/50 transition-all resize-none outline-none font-medium leading-relaxed text-lg"
+                    placeholder="ضع هنا رابط المقال، أو المحتوى النصي، أو فكرة أولية..."
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     disabled={isGenerating}
                     />
-                    <div className="absolute bottom-4 right-4 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 text-xs">
-                        Enter to generate
-                    </div>
                 </div>
             ) : (
                 <div className="flex-1 flex flex-col gap-4">
@@ -96,11 +93,9 @@ export const InputSection: React.FC<InputSectionProps> = ({ onGenerate, isGenera
                     </div>
                     ) : (
                     <>
-                        <div className="w-20 h-20 rounded-full bg-slate-800/50 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border border-slate-700">
-                           <Upload className="w-8 h-8 text-cyan-400" />
-                        </div>
-                        <p className="text-slate-300 font-bold text-lg">Drop image here</p>
-                        <p className="text-slate-500 text-sm mt-2">or click to browse</p>
+                        <Upload className="w-8 h-8 text-cyan-400 mb-4" />
+                        <p className="text-slate-300 font-bold text-lg">ارفع صورة هنا</p>
+                        <p className="text-slate-500 text-sm mt-2">لتحليلها وتوليد محتوى منها</p>
                     </>
                     )}
                     <input 
@@ -111,12 +106,6 @@ export const InputSection: React.FC<InputSectionProps> = ({ onGenerate, isGenera
                         onChange={handleImageUpload}
                     />
                 </div>
-                <textarea
-                    className="h-28 p-4 rounded-xl border border-slate-700 bg-slate-800/30 text-slate-100 placeholder-slate-500 focus:bg-slate-800/50 focus:ring-2 focus:ring-cyan-500/50 outline-none transition-all"
-                    placeholder="Any specific context for this image?"
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                />
                 </div>
             )}
           </div>
@@ -129,24 +118,24 @@ export const InputSection: React.FC<InputSectionProps> = ({ onGenerate, isGenera
                 w-full flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-bold text-white transition-all shadow-xl text-lg relative overflow-hidden
                 ${(!text.trim() && !selectedImage) || isGenerating 
                   ? 'bg-slate-800 cursor-not-allowed opacity-50 border border-slate-700' 
-                  : 'bg-gradient-to-r from-cyan-600 to-blue-600 hover:scale-[1.02] hover:shadow-cyan-500/25 border border-cyan-500/50'}
+                  : 'bg-gradient-to-r from-cyan-600 to-blue-600 hover:scale-[1.02] border border-cyan-500/50'}
               `}
             >
               {isGenerating ? (
                 <>
                   <Sparkles className="w-5 h-5 animate-spin" />
-                  Generating Magic...
+                  جاري التوليد...
                 </>
               ) : (
                 <>
                   <Sparkles className="w-5 h-5" />
-                  GO VIRAL
+                  بدء الانتشار
                   <ArrowRight className="w-5 h-5" />
                 </>
               )}
             </button>
             <p className="text-center text-xs text-slate-500 mt-4 font-mono uppercase tracking-widest opacity-60">
-               Powered by Gemini 1.5 Pro
+               Powered by Gemini 3 Flash (Free Tier)
             </p>
           </div>
       </div>
