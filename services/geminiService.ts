@@ -3,8 +3,8 @@ import { GeneratedContent, InputData } from "../types";
 
 export const generateSocialContent = async (input: InputData): Promise<GeneratedContent> => {
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  // Upgraded to Pro model for Complex Tasks and Long Context generation (6000+ chars)
-  const model = "gemini-3-pro-preview"; 
+  // Use gemini-3-flash-preview for maximum availability and stability in this environment
+  const model = "gemini-3-flash-preview"; 
 
   const parts: any[] = [];
   
@@ -107,9 +107,7 @@ export const generateSocialContent = async (input: InputData): Promise<Generated
           }
         },
         required: ["variations", "longArticle", "suggestedHashtags", "suggestedKeywords", "viralityScore"]
-      },
-      // Enable thinking to ensure the model plans out the 6000 char article
-      thinkingConfig: { thinkingBudget: 2048 }
+      }
     }
   });
 
@@ -127,14 +125,16 @@ export const generateSocialContent = async (input: InputData): Promise<Generated
 
 export const generateVeoVideo = async (script: string): Promise<string> => {
   const win = window as any;
-  if (win.aistudio && win.aistudio.hasSelectedApiKey) {
-     const hasKey = await win.aistudio.hasSelectedApiKey();
-     if (!hasKey) {
-        await win.aistudio.openSelectKey();
-     }
-  }
-
+  
   const performGeneration = async () => {
+    // Check key selection for Veo models as per required guidelines
+    if (win.aistudio && win.aistudio.hasSelectedApiKey) {
+      const hasKey = await win.aistudio.hasSelectedApiKey();
+      if (!hasKey) {
+        await win.aistudio.openSelectKey();
+      }
+    }
+
     const freshAi = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
     let operation = await freshAi.models.generateVideos({
@@ -148,7 +148,7 @@ export const generateVeoVideo = async (script: string): Promise<string> => {
     });
 
     while (!operation.done) {
-      await new Promise(resolve => setTimeout(resolve, 5000));
+      await new Promise(resolve => setTimeout(resolve, 10000));
       operation = await freshAi.operations.getVideosOperation({operation: operation});
     }
 
@@ -162,9 +162,11 @@ export const generateVeoVideo = async (script: string): Promise<string> => {
     return await performGeneration();
   } catch (e: any) {
     const errorMessage = e.message || JSON.stringify(e);
+    // Handle the specific 404/Not Found error by re-prompting for key selection
     if (errorMessage.includes("Requested entity was not found") || errorMessage.includes("404")) {
       if (win.aistudio && win.aistudio.openSelectKey) {
         await win.aistudio.openSelectKey();
+        // After opening dialog, we proceed immediately assuming key selection as per instructions
         return await performGeneration();
       }
     }
